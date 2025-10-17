@@ -1,5 +1,7 @@
 package org.serratec.funcionario.domain;
 
+import java.util.List;
+
 import org.hibernate.validator.constraints.br.CPF;
 
 import jakarta.persistence.CascadeType;
@@ -15,6 +17,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotBlank;
@@ -62,6 +66,15 @@ public class Funcionario {
 	@JoinColumn(name = "departamento_id")
 	@JsonBackReference
 	private Departamento departamento;
+	
+	
+	@ManyToMany
+	@JoinTable(
+			name="funcionario_projeto",
+			joinColumns = @JoinColumn(name = "funcionario_id"),
+			inverseJoinColumns = @JoinColumn(name = "projeto_id")
+	)
+	private List<Projeto> projetos;
 
 	public Funcionario() {
 		super();
@@ -69,11 +82,12 @@ public class Funcionario {
 
 	
 
+
 	public Funcionario(Long id, @NotBlank(message = "O nome não pode ser vazio.") String nome,
 			@CPF(message = "O cpf é inválido") String cpf,
 			@NotNull(message = "O salário é obrigatório.") @Positive(message = "O salário deve ser um valor positivo") Double salario,
 			org.serratec.funcionario.domain.enums.@NotNull(message = "O turno não pode ser nulo") Turno turno,
-			Endereco endereco, Departamento departamento) {
+			Endereco endereco, Departamento departamento, List<Projeto> projetos) {
 		super();
 		Id = id;
 		Nome = nome;
@@ -82,7 +96,23 @@ public class Funcionario {
 		Turno = turno;
 		this.endereco = endereco;
 		this.departamento = departamento;
+		this.projetos = projetos;
 	}
+
+
+
+
+	public List<Projeto> getProjetos() {
+		return projetos;
+	}
+
+
+
+
+	public void setProjetos(List<Projeto> projetos) {
+		this.projetos = projetos;
+	}
+
 
 
 

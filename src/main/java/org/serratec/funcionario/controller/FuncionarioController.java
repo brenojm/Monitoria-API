@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.serratec.funcionario.domain.Funcionario;
 import org.serratec.funcionario.domain.Gerente;
+import org.serratec.funcionario.domain.dto.FuncionarioGetDto;
 import org.serratec.funcionario.exception.RecursoNaoEncontradoException;
 import org.serratec.funcionario.repository.FuncionarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +45,12 @@ public class FuncionarioController {
 	}
 	
 	@PostMapping("/gerente")
-	public ResponseEntity<Gerente> criarGerente(@Valid @RequestBody Gerente gerente) {
+	public ResponseEntity<FuncionarioGetDto> criarGerente(@Valid @RequestBody Gerente gerente) {
 		Gerente gerenteCadastrado = funcionarioRepository.save(gerente);
-		return new ResponseEntity<>(gerenteCadastrado, HttpStatus.CREATED);
+		FuncionarioGetDto dto = new FuncionarioGetDto();
+		dto.Id = gerenteCadastrado.getId();
+		dto.Nome = gerenteCadastrado.getNome();
+		dto.Setor = gerenteCadastrado.getSetor();
+		return new ResponseEntity<>(dto, HttpStatus.CREATED);
 	}
 }
